@@ -12,7 +12,7 @@ export function Navbar() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
         <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={() => navigate('/')}>
+          <Typography style={{cursor: 'pointer'}} variant="h6" component="div" sx={{ flexGrow: 1 }} onClick={() => navigate('/')}>
             Home
           </Typography>
           <Button color="inherit" onClick={() => navigate('/login')}>Login</Button>
