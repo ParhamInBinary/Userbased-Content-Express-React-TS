@@ -22,7 +22,7 @@ export function Login() {
         flexDirection: 'column'
       }}
     >
-        <AccountCircleIcon sx={{ fontSize: 96 }} />
+        <AccountCircleIcon sx={{ fontSize: 96, color: 'lightgray' }} />
       <Box sx={{ width: "100%", maxWidth: "400px" }}>
         <form >
           <TextField
