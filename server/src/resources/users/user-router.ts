@@ -4,7 +4,7 @@ import { UserModel } from "./user-model";
 
 export const userRouter = express
   .Router()
-  .get("/api/users", async (req, res) => {
+  .get("/api/users", async (req: Request, res: Response) => {
     const users = await UserModel.find({});
     res.json(users);
   })
@@ -19,7 +19,11 @@ export const userRouter = express
         typeof username !== "string" ||
         username.length < 3
       ) {
-        res.status(400).json("Invalid username");
+        res
+          .status(400)
+          .json(
+            `${username} is an invalid username. Please make sure its atleast 3 characters long`
+          );
         return;
       }
       if (
@@ -27,7 +31,11 @@ export const userRouter = express
         typeof password !== "string" ||
         password.length < 3
       ) {
-        res.status(400).json("Invalid password");
+        res
+          .status(400)
+          .json(
+            `${password} is an invalid password. Please make sure its atleast 3 characters long`
+          );
         return;
       }
 
@@ -49,7 +57,7 @@ export const userRouter = express
       const user = {
         username,
         password: hashedPassword,
-        isAdmin: false,
+        isAdmin: isAdmin || false,
       };
       const newUser = await UserModel.create(user);
 
@@ -63,33 +71,37 @@ export const userRouter = express
   .post(
     "/api/users/login",
     async (req: Request, res: Response) => {
-      const { username, password, isAdmin } = req.body;
+      const { username, password } = req.body;
       const user = await UserModel.findOne({
-        username: username,
+        username,
       });
 
       if (!user) {
         res
           .status(400)
           .json("Incorrect username or password");
+        return;
       }
 
       const isAuth = await argon2.verify(
-        user!.password,
+        user.password,
         password,
-        isAdmin
       );
-      if (!isAuth)
-        return res
+      if (!isAuth) {
+        res
           .status(400)
           .json("Incorrect username or password");
+        return;
+      }
 
-      req.session!.username = user!.username;
+      req.session!.username = user.username;
 
       res
         .status(200)
-        .json(
-          `Login successful! Welcome ${user?.username}`
-        );
+        .json({
+          _id: user!._id,
+          username: user!.username,
+          isAdmin: user!.isAdmin
+        });
     }
   );
