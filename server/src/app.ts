@@ -8,13 +8,13 @@ export const app = express();
 // SKRIV DIN SERVERKOD HÄR!
 app.use(express.json());
 app.use(
-    cookieSession({
-        name: 'login',
-        secure: false,
-        httpOnly: true,
-        secret: 'sdg669s8dguiksg7993kjbh1',
-        maxAge: 1000 * 20,
-    })
+  cookieSession({
+    name: "login",
+    secure: false,
+    httpOnly: true,
+    secret: "sdg669s8dguiksg7993kjbh1",
+    maxAge: 1000 * 20,
+  })
 );
 app.use(userRouter);
 app.use(postRouter);
