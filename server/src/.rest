@@ -1,0 +1,21 @@
+### GET USERS
+GET http://localhost:3000/api/users
+
+### REGISTER USER 
+POST http://localhost:3000/api/users/register
+Content-Type: application/json
+
+{
+    "username" : "asd@exempel.com",
+    "password" : "asd",
+    "isAdmin" : false
+}
+
+### LOGIN USER
+POST http://localhost:3000/api/users/login
+Content-Type: application/json
+
+{
+    "username" : "asd@exempel.com",
+    "password" : "asd"
+}
