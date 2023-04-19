@@ -5,7 +5,7 @@ import { app } from './app';
 // HÄR SKRIVER NI KODEN FÖR ATT ANSLUTA TILL DATABASEN OCH STARTA SERVERN
 
 async function main() {
-    await mongoose.connect('mongodb://127.0.0.1:27017');
+    await mongoose.connect('mongodb://127.0.0.1:27017/WallOfPosts');
     console.log('Connected to Database');
     
     app.listen(3000, () => {
