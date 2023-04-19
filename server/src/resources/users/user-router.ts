@@ -12,6 +12,25 @@ export const userRouter = express
     "/api/users/register",
     async (req: Request, res: Response) => {
       const { username, password, isAdmin } = req.body;
+
+      // CHECKS FOR INCORRECT OR MISSING VALUES
+      if (
+        !username ||
+        typeof username !== "string" ||
+        username.length < 3
+      ) {
+        res.status(400).json("Invalid username");
+        return;
+      }
+      if (
+        !password ||
+        typeof password !== "string" ||
+        password.length < 3
+      ) {
+        res.status(400).json("Invalid password");
+        return;
+      }
+
       const hashedPassword = await argon2.hash(password);
 
       // CHECKS USERNAME TO EXSISTING ONE
@@ -30,18 +49,15 @@ export const userRouter = express
       const user = {
         username,
         password: hashedPassword,
-        isAdmin,
+        isAdmin: false,
       };
       const newUser = await UserModel.create(user);
 
-      res.status(201).json(
-        `
-          _id: ${newUser._id}
-          username: ${newUser.username} 
-          password: ${newUser.password} 
-          admin: ${newUser.isAdmin}
-        `
-      );
+      res.status(201).json({
+        _id: newUser._id,
+        username: newUser.username,
+        isAdmin: newUser.isAdmin,
+      });
     }
   )
   .post(
@@ -70,6 +86,10 @@ export const userRouter = express
 
       req.session!.username = user!.username;
 
-      res.status(200).json("Login successful!");
+      res
+        .status(200)
+        .json(
+          `Login successful! Welcome ${user?.username}`
+        );
     }
   );
