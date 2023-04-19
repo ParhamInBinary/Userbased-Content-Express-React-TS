@@ -14,6 +14,19 @@ export const userRouter = express
       const { username, password, isAdmin } = req.body;
       const hashedPassword = await argon2.hash(password);
 
+      // CHECKS USERNAME TO EXSISTING ONE
+      const existsingUser = await UserModel.findOne({
+        username,
+      });
+      if (existsingUser) {
+        res
+          .status(409)
+          .json(
+            "This username is taken. Please chose another one"
+          );
+        return;
+      }
+
       const user = {
         username,
         password: hashedPassword,
@@ -21,19 +34,13 @@ export const userRouter = express
       };
       const newUser = await UserModel.create(user);
 
-      if (!username || !password) {
-        res
-          .status(400)
-          .json("invalid username or password");
-        return;
-      }
-
       res.status(201).json(
-        `New user created: 
-          userID: ${newUser._id}
+        `
+          _id: ${newUser._id}
           username: ${newUser.username} 
           password: ${newUser.password} 
-          admin: ${newUser.isAdmin}`
+          admin: ${newUser.isAdmin}
+        `
       );
     }
   )
