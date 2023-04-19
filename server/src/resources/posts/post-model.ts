@@ -1,7 +1,9 @@
 import { InferSchemaType, Schema, model } from 'mongoose';
 
 export const postSchema = new Schema({
-    content: { type: String, required: true},
+    title: { type: String, required: true},
+    content: { type: String, required: true, maxlenght: 400},
+    author: { type: String, required: false}
 })
 
 export type Post = InferSchemaType<typeof postSchema>;
