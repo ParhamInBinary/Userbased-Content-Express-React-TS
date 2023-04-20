@@ -87,3 +87,36 @@ export const postRouter = express
       }
     }
   );
+
+  .put(
+    "/api/posts/:id",
+    auth,
+    async (req: Request, res: Response) => {
+      try {
+        const { title, content } = req.body;
+        const updatedPost = await PostModel.findByIdAndUpdate(
+          req.params.id,
+          { title, content },
+          { new: true }
+        );
+  
+        if (!updatedPost) {
+          res.status(404).json(`${req.params.id} not found`);
+          return;
+        }
+  
+        res.status(200).json({
+          _id: updatedPost._id.toString(),
+          title: updatedPost.title,
+          content: updatedPost.content,
+          author: updatedPost.author,
+          createdAt: updatedPost.createdAt,
+          updatedAt: updatedPost.updatedAt,
+        });
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
+  );
+  
