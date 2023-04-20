@@ -91,4 +91,56 @@ export const postRouter = express
       res.sendStatus(500);
       console.log(error?.message);
     }
-  });
+  })
+  .put(
+    "/api/posts/:id",
+    auth,
+    async (req: Request, res: Response) => {
+      try {
+        const post = await PostModel.findById(req.params.id);
+
+        if (!post) {
+          res.status(404).json(`${req.params.id} not found`);
+          return;
+        }
+
+        const loggedInUser = req.session;
+        const user = await UserModel.findOne({
+          loggedInUser,
+        });
+
+        if (!user || post.author.toString() !== user._id.toString()) {
+          res.status(403).json("Forbidden");
+          return;
+        }
+
+        const { title, content } = req.body;
+
+        if ( !title || typeof title !== "string" || title.length < 1) {
+          res.status(400).json({ error: "Invalid title" });
+          return;
+        }
+        if ( !content || typeof content !== "string" || content.length < 1) {
+          res.status(400).json({ error: "Invalid content" });
+          return;
+        }
+
+        post.title = title;
+        post.content = content;
+        const updatedPost = await post.save();
+
+        res.status(200).json({
+          _id: updatedPost._id.toString(),
+          title: updatedPost.title,
+          content: updatedPost.content,
+          author: updatedPost.author.toString(),
+          createdAt: updatedPost.createdAt.toString(),
+          updatedAt: updatedPost.updatedAt.toString(),
+        });
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
+  )
+
