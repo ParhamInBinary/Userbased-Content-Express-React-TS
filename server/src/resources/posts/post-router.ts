@@ -92,14 +92,23 @@ export const postRouter = express
     auth,
     async (req: Request, res: Response) => {
       try {
-        const postId = req.params.id;
-        const post = await PostModel.findById(postId);
+        const loggedInUser = req.session;
+        const user = await UserModel.findOne({
+          loggedInUser,
+        });
+        const post = await PostModel.findById(req.params.id);
 
         if (!post) {
           res.status(404).json(`Post not found`);
           return;
         }
 
+        if (post.author.toString() !== user!._id.toString()) {
+          res.status(403).json("Not authorized to delete this post");
+          return;
+        }
+
+        
         await post.delete();
         res.sendStatus(204);
       } catch (error: any) {
