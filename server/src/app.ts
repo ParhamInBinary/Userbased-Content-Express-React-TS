@@ -18,3 +18,9 @@ app.use(
 );
 app.use(userRouter);
 app.use(postRouter);
+
+// app.use((err, req, res, next) => {
+
+// })
+// global = console.error, res 500 err.message
+// Pinga Discord/Slack/Teams
