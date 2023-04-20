@@ -5,48 +5,34 @@ import { PostModel } from "./post-model";
 
 export const postRouter = express
   .Router()
-  .get(
-    "/api/posts",
-    async (req: Request, res: Response) => {
-      const posts = await PostModel.find({});
-      res.json(posts);
-    }
-  )
-  .post(
-    "/api/posts",
-    auth,
-    async (req: Request, res: Response) => {
-      try {
-        const loggedInUser = req.session;
-        const user = await UserModel.findOne({
-          loggedInUser,
-        });
-        const { title, content } = req.body;
+  .get("/api/posts", async (req: Request, res: Response) => {
+    const posts = await PostModel.find({});
+    res.json(posts);
+  })
+  .post("/api/posts", auth, async (req: Request, res: Response) => {
+    try {
+      const loggedInUser = req.session;
+      const user = await UserModel.findOne({
+        loggedInUser,
+      });
+      const { title, content } = req.body;
 
-        // CHECK FOR MISSING OR INCORRECT VALUES
-        if (
-          !title ||
-          typeof title !== "string" ||
-          title.length < 1
-        ) {
-          res.status(400).json('/"title"/i');
-          return;
-        }
-        if (
-          !content ||
-          typeof content !== "string" ||
-          content.length < 1
-        ) {
-          res.status(400).json('/"content"/i');
-          return;
-        }
+      // CHECK FOR MISSING OR INCORRECT VALUES
+      if (!title || typeof title !== "string" || title.length < 1) {
+        res.status(400).json('/"title"/i');
+        return;
+      }
+      if (!content || typeof content !== "string" || content.length < 1) {
+        res.status(400).json('/"content"/i');
+        return;
+      }
 
-        const post = {
-          title: title,
-          content: content,
-          author: user!._id,
-        };
-        const newPost = await PostModel.create(post);
+      const post = {
+        title: title,
+        content: content,
+        author: user!._id,
+      };
+      const newPost = await PostModel.create(post);
 
         res.status(201).json({
           _id: newPost._id,
