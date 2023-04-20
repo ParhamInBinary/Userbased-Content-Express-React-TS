@@ -4,6 +4,9 @@ export const postSchema = new Schema({
   title: { type: String, required: true },
   content: { type: String, required: true, maxlenght: 400 },
   author: { type: String, required: false },
+}, {
+  versionKey: false,
+  timestamps: true,
 });
 
 export type Post = InferSchemaType<typeof postSchema>;
