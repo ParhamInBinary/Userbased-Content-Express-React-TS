@@ -59,4 +59,31 @@ export const postRouter = express
         console.log(error?.message);
       }
     }
+  )
+  .get(
+    "/api/posts/:id",
+    async (req: Request, res: Response) => {
+      try {
+        const specificPost = await PostModel.findById(
+          req.params.id
+        );
+
+        if (!specificPost) {
+          res.status(404).json(`${req.params.id} not found`);
+          return
+        }
+
+        res.status(200).json({
+          _id: specificPost!._id.toString(),
+          title: specificPost!.title,
+          content: specificPost!.content,
+          author: specificPost!.author,
+          createdAt: specificPost!.createdAt,
+          updatedAt: specificPost!.updatedAt,
+        });
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
   );
