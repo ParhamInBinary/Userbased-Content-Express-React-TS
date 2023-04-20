@@ -1,37 +1,62 @@
-import express, { Request, Response } from 'express';
-import { PostModel } from './post-model';
-import { auth } from '../../middlewares/auth';
+import express, { Request, Response } from "express";
+import { auth } from "../../middlewares/auth";
+import { UserModel } from "../users/user-model";
+import { PostModel } from "./post-model";
 
 export const postRouter = express
-.Router()
-.get('/api/posts', async (req: Request, res: Response) => {
-    const posts = await PostModel.find({})
-    res.json(posts)
-})
-.post('/api/posts', auth, async (req: Request, res: Response) => {
-    const loggedInUser = req.session
-    const { title, content } = req.body
-
-    // CHECK FOR MISSING OR INCORRECT VALUES
-    if( !title || typeof title !== 'string' || title.length < 1) {
-        res.status(400).json('Your post needs a title.');
-        return
+  .Router()
+  .get(
+    "/api/posts",
+    async (req: Request, res: Response) => {
+      const posts = await PostModel.find({});
+      res.json(posts);
     }
-    if( !content || typeof content !== 'string' || content.length < 1) {
-        res.status(400).json('Your post cant be empty.');
-        return
-    }
+  )
+  .post(
+    "/api/posts",
+    auth,
+    async (req: Request, res: Response) => {
+      try {
+        const loggedInUser = req.session;
+        const user = await UserModel.findOne({
+          loggedInUser,
+        });
+        const { title, content } = req.body;
 
-    const post = {
-        title: title,
-        content: content,
-        author: loggedInUser
-    }
-    const newPost = await PostModel.create(post)
+        // CHECK FOR MISSING OR INCORRECT VALUES
+        if (
+          !title ||
+          typeof title !== "string" ||
+          title.length < 1
+        ) {
+          res.status(400).json('/"title"/i');
+          return;
+        }
+        if (
+          !content ||
+          typeof content !== "string" ||
+          content.length < 1
+        ) {
+          res.status(400).json('/"content"/i');
+          return;
+        }
 
-    res.status(201).json({
-        title: newPost.title,
-        content: newPost.content,
-        author: newPost.author,
-    })
-})
+        const post = {
+          title: title,
+          content: content,
+          author: user!._id,
+        };
+        const newPost = await PostModel.create(post);
+
+        res.status(201).json({
+          _id: newPost._id,
+          title: newPost.title,
+          content: newPost.content,
+          author: newPost.author,
+        });
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
+  );
