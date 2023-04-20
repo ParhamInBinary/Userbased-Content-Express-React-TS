@@ -86,4 +86,26 @@ export const postRouter = express
         console.log(error?.message);
       }
     }
+  )
+  .delete(
+    "/api/posts/:id",
+    auth,
+    async (req: Request, res: Response) => {
+      try {
+        const postId = req.params.id;
+        const post = await PostModel.findById(postId);
+
+        if (!post) {
+          res.status(404).json(`Post not found`);
+          return;
+        }
+
+        await post.delete();
+        res.sendStatus(204);
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
   );
+
