@@ -14,7 +14,7 @@ export const userRouter = express
   .post(
     "/api/users/register",
     async (req: Request, res: Response) => {
-      const { username, password, isAdmin } = req.body;
+      const { username, password } = req.body;
 
       // CHECKS FOR INCORRECT OR MISSING VALUES
       if (
@@ -34,8 +34,6 @@ export const userRouter = express
         return;
       }
 
-      const hashedPassword = await argon2.hash(password);
-
       // CHECKS USERNAME TO EXSISTING ONE
       const existsingUser = await UserModel.findOne({
         username,
@@ -51,8 +49,7 @@ export const userRouter = express
 
       const user = {
         username,
-        password: hashedPassword,
-        isAdmin: isAdmin || false,
+        password,
       };
       const newUser = await UserModel.create(user);
 
@@ -78,11 +75,10 @@ export const userRouter = express
             .json("Incorrect username or password");
           return;
         }
-        // const isAuth = await argon2.verify(
-        //   user.password,
-        //   password,
-        // );
-        const isAuth = user.password === password;
+        const isAuth = await argon2.verify(
+          user.password,
+          password
+        );
         if (!isAuth) {
           res
             .status(401)
@@ -91,6 +87,8 @@ export const userRouter = express
         }
 
         req.session!.username = user.username;
+        req.session!._id = user._id;
+        req.session!.isAdmin = user.isAdmin;
 
         res.status(200).json({
           _id: user!._id,
@@ -106,7 +104,7 @@ export const userRouter = express
   .post(
     "/api/users/logout",
     async (req: Request, res: Response) => {
-      res.cookie("login", "", { maxAge: 0 });
+      req.session = null;
       res.sendStatus(204);
     }
   );
