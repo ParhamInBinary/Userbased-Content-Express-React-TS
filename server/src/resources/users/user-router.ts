@@ -4,10 +4,13 @@ import { UserModel } from "./user-model";
 
 export const userRouter = express
   .Router()
-  .get("/api/users", async (req: Request, res: Response) => {
-    const users = await UserModel.find({});
-    res.json(users);
-  })
+  .get(
+    "/api/users",
+    async (req: Request, res: Response) => {
+      const users = await UserModel.find({});
+      res.json(users);
+    }
+  )
   .post(
     "/api/users/register",
     async (req: Request, res: Response) => {
@@ -19,11 +22,7 @@ export const userRouter = express
         typeof username !== "string" ||
         username.length < 3
       ) {
-        res
-          .status(400)
-          .json(
-            `${username} is an invalid username. Please make sure its atleast 3 characters long`
-          );
+        res.status(400).json(`/"username"/i`);
         return;
       }
       if (
@@ -31,11 +30,7 @@ export const userRouter = express
         typeof password !== "string" ||
         password.length < 3
       ) {
-        res
-          .status(400)
-          .json(
-            `${password} is an invalid password. Please make sure its atleast 3 characters long`
-          );
+        res.status(400).json(`/"password"/i`);
         return;
       }
 
@@ -71,37 +66,47 @@ export const userRouter = express
   .post(
     "/api/users/login",
     async (req: Request, res: Response) => {
-      const { username, password } = req.body;
-      const user = await UserModel.findOne({
-        username,
-      });
+      try {
+        const { username, password } = req.body;
+        const user = await UserModel.findOne({
+          username,
+        });
 
-      if (!user) {
-        res
-          .status(400)
-          .json("Incorrect username or password");
-        return;
-      }
+        if (!user) {
+          res
+            .status(401)
+            .json("Incorrect username or password");
+          return;
+        }
+        // const isAuth = await argon2.verify(
+        //   user.password,
+        //   password,
+        // );
+        const isAuth = user.password === password;
+        if (!isAuth) {
+          res
+            .status(401)
+            .json("Incorrect username or password");
+          return;
+        }
 
-      const isAuth = await argon2.verify(
-        user.password,
-        password,
-      );
-      if (!isAuth) {
-        res
-          .status(400)
-          .json("Incorrect username or password");
-        return;
-      }
+        req.session!.username = user.username;
 
-      req.session!.username = user.username;
-
-      res
-        .status(200)
-        .json({
+        res.status(200).json({
           _id: user!._id,
           username: user!.username,
-          isAdmin: user!.isAdmin
+          isAdmin: user!.isAdmin,
         });
+      } catch (error: any) {
+        res.sendStatus(500);
+        console.log(error?.message);
+      }
+    }
+  )
+  .post(
+    "/api/users/logout",
+    async (req: Request, res: Response) => {
+      res.cookie("login", "", { maxAge: 0 });
+      res.sendStatus(204);
     }
   );
