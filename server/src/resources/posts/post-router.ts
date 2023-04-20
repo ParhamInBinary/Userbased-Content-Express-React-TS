@@ -34,11 +34,84 @@ export const postRouter = express
       };
       const newPost = await PostModel.create(post);
 
-        res.status(201).json({
-          _id: newPost._id,
-          title: newPost.title,
-          content: newPost.content,
-          author: newPost.author,
+      res.status(201).json({
+        _id: newPost._id,
+        title: newPost.title,
+        content: newPost.content,
+        author: newPost.author,
+      });
+    } catch (error: any) {
+      res.sendStatus(500);
+      console.log(error?.message);
+    }
+  })
+  .get("/api/posts/:id", async (req: Request, res: Response) => {
+    try {
+      const specificPost = await PostModel.findById(req.params.id);
+
+      if (!specificPost) {
+        res.status(404).json(`${req.params.id} not found`);
+        return;
+      }
+
+      res.status(200).json({
+        _id: specificPost!._id.toString(),
+        title: specificPost!.title,
+        content: specificPost!.content,
+        author: specificPost!.author,
+        createdAt: specificPost!.createdAt,
+        updatedAt: specificPost!.updatedAt,
+      });
+    } catch (error: any) {
+      res.sendStatus(500);
+      console.log(error?.message);
+    }
+  })
+
+  .put(
+    "/api/posts/:id",
+    auth,
+    async (req: Request, res: Response) => {
+      try {
+        const post = await PostModel.findById(req.params.id);
+
+        if (!post) {
+          res.status(404).json(`${req.params.id} not found`);
+          return;
+        }
+
+        const loggedInUser = req.session;
+        const user = await UserModel.findOne({
+          loggedInUser,
+        });
+
+        if (!user || post.author.toString() !== user._id.toString()) {
+          res.status(403).json("Forbidden");
+          return;
+        }
+
+        const { title, content } = req.body;
+
+        if ( !title || typeof title !== "string" || title.length < 1) {
+          res.status(400).json({ error: "Invalid title" });
+          return;
+        }
+        if ( !content || typeof content !== "string" || content.length < 1) {
+          res.status(400).json({ error: "Invalid content" });
+          return;
+        }
+
+        post.title = title;
+        post.content = content;
+        const updatedPost = await post.save();
+
+        res.status(200).json({
+          _id: updatedPost._id.toString(),
+          title: updatedPost.title,
+          content: updatedPost.content,
+          author: updatedPost.author.toString(),
+          createdAt: updatedPost.createdAt.toString(),
+          updatedAt: updatedPost.updatedAt.toString(),
         });
       } catch (error: any) {
         res.sendStatus(500);
@@ -46,63 +119,6 @@ export const postRouter = express
       }
     }
   )
-  .get(
-    "/api/posts/:id",
-    async (req: Request, res: Response) => {
-      try {
-        const specificPost = await PostModel.findById(
-          req.params.id
-        );
 
-        if (!specificPost) {
-          res.status(404).json(`${req.params.id} not found`);
-          return
-        }
 
-        res.status(200).json({
-          _id: specificPost!._id.toString(),
-          title: specificPost!.title,
-          content: specificPost!.content,
-          author: specificPost!.author,
-          createdAt: specificPost!.createdAt,
-          updatedAt: specificPost!.updatedAt,
-        });
-      } catch (error: any) {
-        res.sendStatus(500);
-        console.log(error?.message);
-      }
-    }
-  );
-
-  .put(
-    "/api/posts/:id",
-    auth,
-    async (req: Request, res: Response) => {
-      try {
-        const { title, content } = req.body;
-        const updatedPost = await PostModel.findByIdAndUpdate(
-          req.params.id,
-          { title, content },
-          { new: true }
-        );
-  
-        if (!updatedPost) {
-          res.status(404).json(`${req.params.id} not found`);
-          return;
-        }
-  
-        res.status(200).json({
-          _id: updatedPost._id.toString(),
-          title: updatedPost.title,
-          content: updatedPost.content,
-          author: updatedPost.author,
-          createdAt: updatedPost.createdAt,
-          updatedAt: updatedPost.updatedAt,
-        });
-      } catch (error: any) {
-        res.sendStatus(500);
-        console.log(error?.message);
-      }
-    }
-  );
   
