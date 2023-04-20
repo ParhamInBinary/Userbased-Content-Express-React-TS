@@ -76,7 +76,7 @@ export const postRouter = express
       const post = await PostModel.findById(req.params.id);
 
       if (!post) {
-        res.status(404).json(`Post not found`);
+        res.status(404).json(`${req.params.id} not found`);
         return;
       }
 
