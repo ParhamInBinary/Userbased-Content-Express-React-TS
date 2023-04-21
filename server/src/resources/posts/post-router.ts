@@ -1,16 +1,22 @@
 import express, { Request, Response } from "express";
+import Joi from "joi";
 import { auth } from "../../middlewares/auth";
 import { UserModel } from "../users/user-model";
 import { PostModel } from "./post-model";
 
 export const postRouter = express
   .Router()
-  .get("/api/posts", async (req: Request, res: Response) => {
-    const posts = await PostModel.find({});
-    res.json(posts);
-  })
-  .post("/api/posts", auth, async (req: Request, res: Response) => {
-    // try {
+  .get(
+    "/api/posts",
+    async (req: Request, res: Response) => {
+      const posts = await PostModel.find({});
+      res.json(posts);
+    }
+  )
+  .post(
+    "/api/posts",
+    auth,
+    async (req: Request, res: Response) => {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
         loggedInUser,
@@ -18,12 +24,15 @@ export const postRouter = express
       const { title, content } = req.body;
 
       // CHECK FOR MISSING OR INCORRECT VALUES
-      if (!title || typeof title !== "string" || title.length < 1) {
-        res.status(400).json('/"title"/i');
-        return;
-      }
-      if (!content || typeof content !== "string" || content.length < 1) {
-        res.status(400).json('/"content"/i');
+      const schema = Joi.object({
+        title: Joi.string().required(),
+        content: Joi.string().required(),
+      });
+
+      const result = schema.validate(req.body);
+
+      if (result.error) {
+        res.status(400).json(result.error.message);
         return;
       }
 
@@ -40,14 +49,14 @@ export const postRouter = express
         content: newPost.content,
         author: newPost.author,
       });
-    // } catch (error: any) {
-    //   res.sendStatus(500);
-    //   console.log(error?.message);
-    // }
-  })
-  .get("/api/posts/:id", async (req: Request, res: Response) => {
-    // try {
-      const specificPost = await PostModel.findById(req.params.id);
+    }
+  )
+  .get(
+    "/api/posts/:id",
+    async (req: Request, res: Response) => {
+      const specificPost = await PostModel.findById(
+        req.params.id
+      );
 
       if (!specificPost) {
         res.status(404).json(`${req.params.id} not found`);
@@ -62,13 +71,12 @@ export const postRouter = express
         createdAt: specificPost!.createdAt,
         updatedAt: specificPost!.updatedAt,
       });
-    // } catch (error: any) {
-    //   res.sendStatus(500);
-    //   console.log(error?.message);
-    // }
-  })
-  .delete("/api/posts/:id", auth, async (req: Request, res: Response) => {
-    // try {
+    }
+  )
+  .delete(
+    "/api/posts/:id",
+    auth,
+    async (req: Request, res: Response) => {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
         loggedInUser,
@@ -81,66 +89,69 @@ export const postRouter = express
       }
 
       if (post.author.toString() !== user!._id.toString()) {
-        res.status(403).json("Not authorized to delete this post");
+        res
+          .status(403)
+          .json("Not authorized to delete this post");
         return;
       }
 
       await post.delete();
       res.sendStatus(204);
-    // } catch (error: any) {
-    //   res.sendStatus(500);
-    //   console.log(error?.message);
-    // }
-  })
+    }
+  )
   .put(
     "/api/posts/:id",
     auth,
     async (req: Request, res: Response) => {
-      // try {
-        const post = await PostModel.findById(req.params.id);
+      const post = await PostModel.findById(req.params.id);
 
-        if (!post) {
-          res.status(404).json(`${req.params.id} not found`);
-          return;
-        }
+      if (!post) {
+        res.status(404).json(`${req.params.id} not found`);
+        return;
+      }
 
-        const loggedInUser = req.session;
-        const user = await UserModel.findOne({
-          loggedInUser,
-        });
+      const loggedInUser = req.session;
+      const user = await UserModel.findOne({
+        loggedInUser,
+      });
 
-        if (!user || post.author.toString() !== user._id.toString()) {
-          res.status(403).json("Forbidden");
-          return;
-        }
+      if (
+        !user ||
+        post.author.toString() !== user._id.toString()
+      ) {
+        res.status(403).json("Forbidden");
+        return;
+      }
 
-        const { title, content } = req.body;
+      const { title, content } = req.body;
 
-        if ( !title || typeof title !== "string" || title.length < 1) {
-          res.status(400).json({ error: "Invalid title" });
-          return;
-        }
-        if ( !content || typeof content !== "string" || content.length < 1) {
-          res.status(400).json({ error: "Invalid content" });
-          return;
-        }
+      const schema = Joi.object({
+        title: Joi.string().required(),
+        content: Joi.string().required(),
+        author: Joi.string().required(),
+        _id: Joi.string().required(),
+        createdAt: Joi.date().required(),
+        updatedAt: Joi.date().required(),
+      });
 
-        post.title = title;
-        post.content = content;
-        const updatedPost = await post.save();
+      const result = schema.validate(req.body);
 
-        res.status(200).json({
-          _id: updatedPost._id.toString(),
-          title: updatedPost.title,
-          content: updatedPost.content,
-          author: updatedPost.author.toString(),
-          createdAt: updatedPost.createdAt.toString(),
-          updatedAt: updatedPost.updatedAt.toString(),
-        });
-      // } catch (error: any) {
-      //   res.sendStatus(500);
-      //   console.log(error?.message);
-      // }
+      if (result.error) {
+        res.status(400).json(result.error.message);
+        return;
+      }
+
+      post.title = title;
+      post.content = content;
+      const updatedPost = await post.save();
+
+      res.status(200).json({
+        _id: updatedPost._id.toString(),
+        title: updatedPost.title,
+        content: updatedPost.content,
+        author: updatedPost.author.toString(),
+        createdAt: updatedPost.createdAt.toString(),
+        updatedAt: updatedPost.updatedAt.toString(),
+      });
     }
-  )
-
+  );
