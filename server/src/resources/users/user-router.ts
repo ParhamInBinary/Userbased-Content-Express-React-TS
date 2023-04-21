@@ -63,42 +63,37 @@ export const userRouter = express
   .post(
     "/api/users/login",
     async (req: Request, res: Response) => {
-      // try {
-        const { username, password } = req.body;
-        const user = await UserModel.findOne({
-          username,
-        });
+      const { username, password } = req.body;
+      const user = await UserModel.findOne({
+        username,
+      });
 
-        if (!user) {
-          res
-            .status(401)
-            .json("Incorrect username or password");
-          return;
-        }
-        const isAuth = await argon2.verify(
-          user.password,
-          password
-        );
-        if (!isAuth) {
-          res
-            .status(401)
-            .json("Incorrect username or password");
-          return;
-        }
+      if (!user) {
+        res
+          .status(401)
+          .json("Incorrect username or password");
+        return;
+      }
+      const isAuth = await argon2.verify(
+        user.password,
+        password
+      );
+      if (!isAuth) {
+        res
+          .status(401)
+          .json("Incorrect username or password");
+        return;
+      }
 
-        req.session!.username = user.username;
-        req.session!._id = user._id;
-        req.session!.isAdmin = user.isAdmin;
+      req.session!.username = user.username;
+      req.session!._id = user._id;
+      req.session!.isAdmin = user.isAdmin;
 
-        res.status(200).json({
-          _id: user!._id,
-          username: user!.username,
-          isAdmin: user!.isAdmin,
-        });
-      // } catch (error: any) {
-      //   res.sendStatus(500);
-      //   console.log(error?.message);
-      // }
+      res.status(200).json({
+        _id: user!._id,
+        username: user!.username,
+        isAdmin: user!.isAdmin,
+      });
     }
   )
   .post(
