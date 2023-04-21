@@ -10,7 +10,7 @@ export const postRouter = express
     res.json(posts);
   })
   .post("/api/posts", auth, async (req: Request, res: Response) => {
-    try {
+    // try {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
         loggedInUser,
@@ -40,13 +40,13 @@ export const postRouter = express
         content: newPost.content,
         author: newPost.author,
       });
-    } catch (error: any) {
-      res.sendStatus(500);
-      console.log(error?.message);
-    }
+    // } catch (error: any) {
+    //   res.sendStatus(500);
+    //   console.log(error?.message);
+    // }
   })
   .get("/api/posts/:id", async (req: Request, res: Response) => {
-    try {
+    // try {
       const specificPost = await PostModel.findById(req.params.id);
 
       if (!specificPost) {
@@ -62,13 +62,13 @@ export const postRouter = express
         createdAt: specificPost!.createdAt,
         updatedAt: specificPost!.updatedAt,
       });
-    } catch (error: any) {
-      res.sendStatus(500);
-      console.log(error?.message);
-    }
+    // } catch (error: any) {
+    //   res.sendStatus(500);
+    //   console.log(error?.message);
+    // }
   })
   .delete("/api/posts/:id", auth, async (req: Request, res: Response) => {
-    try {
+    // try {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
         loggedInUser,
@@ -87,16 +87,16 @@ export const postRouter = express
 
       await post.delete();
       res.sendStatus(204);
-    } catch (error: any) {
-      res.sendStatus(500);
-      console.log(error?.message);
-    }
+    // } catch (error: any) {
+    //   res.sendStatus(500);
+    //   console.log(error?.message);
+    // }
   })
   .put(
     "/api/posts/:id",
     auth,
     async (req: Request, res: Response) => {
-      try {
+      // try {
         const post = await PostModel.findById(req.params.id);
 
         if (!post) {
@@ -137,10 +137,10 @@ export const postRouter = express
           createdAt: updatedPost.createdAt.toString(),
           updatedAt: updatedPost.updatedAt.toString(),
         });
-      } catch (error: any) {
-        res.sendStatus(500);
-        console.log(error?.message);
-      }
+      // } catch (error: any) {
+      //   res.sendStatus(500);
+      //   console.log(error?.message);
+      // }
     }
   )
 

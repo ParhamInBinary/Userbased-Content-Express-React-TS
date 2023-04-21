@@ -63,7 +63,7 @@ export const userRouter = express
   .post(
     "/api/users/login",
     async (req: Request, res: Response) => {
-      try {
+      // try {
         const { username, password } = req.body;
         const user = await UserModel.findOne({
           username,
@@ -95,10 +95,10 @@ export const userRouter = express
           username: user!.username,
           isAdmin: user!.isAdmin,
         });
-      } catch (error: any) {
-        res.sendStatus(500);
-        console.log(error?.message);
-      }
+      // } catch (error: any) {
+      //   res.sendStatus(500);
+      //   console.log(error?.message);
+      // }
     }
   )
   .post(
