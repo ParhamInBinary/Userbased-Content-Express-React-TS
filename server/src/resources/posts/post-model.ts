@@ -2,7 +2,7 @@ import { InferSchemaType, Schema, model } from "mongoose";
 
 export const postSchema = new Schema({
   title: { type: String, required: true },
-  content: { type: String, required: true, maxlength: 400 },
+  content: { type: String, required: true },
   author: { type: String, required: true },
 }, {
   versionKey: false,
