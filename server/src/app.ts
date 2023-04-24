@@ -22,6 +22,4 @@ app.use(postRouter);
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
   res.sendStatus(500);
   console.log(err?.message);
-})
-// global = console.error, res 500 err.message
-// Pinga Discord/Slack/Teams
+});
