@@ -25,9 +25,9 @@ export function Register() {
       <Box sx={{ width: "100%", maxWidth: "400px" }}>
         <form >
           <TextField
-            id="email"
-            label="Email Address"
-            type="email"
+            id="username"
+            label="Username"
+            type="username"
             fullWidth
             required
             margin="normal"
@@ -36,15 +36,6 @@ export function Register() {
           <TextField
             id="password"
             label="Password"
-            type="password"
-            fullWidth
-            required
-            margin="normal"
-            variant="outlined"
-          />
-          <TextField
-            id="repeatPassword"
-            label="Repeat password"
             type="password"
             fullWidth
             required
