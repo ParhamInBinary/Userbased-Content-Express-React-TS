@@ -10,8 +10,8 @@ async function main() {
   );
   console.log("Connected to Database");
 
-  app.listen(5175, () => {
-    console.log("Server is running: http://localhost:5175");
+  app.listen(3000, () => {
+    console.log("Server is running: http://localhost:3000");
   });
 }
 
