@@ -26,9 +26,9 @@ export function Login() {
       <Box sx={{ width: "100%", maxWidth: "400px" }}>
         <form >
           <TextField
-            id="email"
-            label="Email Address"
-            type="email"
+            id="username"
+            label="Username"
+            type="username"
             fullWidth
             required
             margin="normal"
