@@ -33,13 +33,13 @@ Para ihop er i grupp om tre - ni väljer själva vilka ni jobbar med.
 
 **Krav för godkänt:**
 
-- [ ] Git & GitHub har använts
-- [ ] Projektmappen innehåller en README.md fil (läs ovan för mer info)
-- [ ] Uppgiften lämnas in i tid!
-- [ ] Det ska finnas minst två stycken resurser (users & posts)
-- [ ] Det ska gå att registrera sig, logga in och skapa innehåll som är kopplat till inloggad användare.
-- [ ] Endast den inloggade användaren får lov att utföra C_UD actions på sitt innehåll.
-- [ ] Allt innehåll ska sparas i en MongoDB databas.
+- [x] Git & GitHub har använts
+- [x] Projektmappen innehåller en README.md fil (läs ovan för mer info)
+- [x] Uppgiften lämnas in i tid!
+- [x] Det ska finnas minst två stycken resurser (users & posts)
+- [x] Det ska gå att registrera sig, logga in och skapa innehåll som är kopplat till inloggad användare.
+- [x] Endast den inloggade användaren får lov att utföra C_UD actions på sitt innehåll.
+- [x] Allt innehåll ska sparas i en MongoDB databas.
 
 _Gjorda krav ska kryssar i_
 
