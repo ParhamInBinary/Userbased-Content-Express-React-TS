@@ -1,14 +1,30 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { Button, TextField, Box } from "@mui/material";
-import { useNavigate } from 'react-router-dom';
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Box, Button, TextField } from "@mui/material";
+import { useState } from "react";
 
 export function Register() {
-    const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     handle login logic here
-//   };
+  const handleRegisterAccount = async (e: any) => {
+    e.preventDefault();
+
+    const newUser = {
+      username,
+      password,
+    };
+
+    const response = await fetch("/api/users/register", {
+      method: "POST",
+      body: JSON.stringify(newUser),
+      headers: { "Content-type": "application/json" },
+    });
+
+    if (response.ok) {
+      setUsername("");
+      setPassword("");
+    }
+  };
 
   return (
     <Box
@@ -18,21 +34,25 @@ export function Register() {
         alignItems: "center",
         height: "100vh",
         padding: "0 16px",
-        flexDirection: 'column'
+        flexDirection: "column",
       }}
     >
-        <AccountCircleIcon sx={{ fontSize: 96, color: 'lightgray' }} />
+      <AccountCircleIcon
+        sx={{ fontSize: 96, color: "lightgray" }}
+      />
       <Box sx={{ width: "100%", maxWidth: "400px" }}>
-        <form >
+        <form>
           <TextField
             id="username"
             label="Username"
-            type="username"
+            type="text"
             fullWidth
             required
             margin="normal"
             variant="outlined"
-          />
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            />
           <TextField
             id="password"
             label="Password"
@@ -41,6 +61,8 @@ export function Register() {
             required
             margin="normal"
             variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -48,6 +70,7 @@ export function Register() {
             size="large"
             sx={{ mt: 3 }}
             fullWidth
+            onClick={handleRegisterAccount}
           >
             Register account
           </Button>
