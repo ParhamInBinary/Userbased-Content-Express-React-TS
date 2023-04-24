@@ -13,7 +13,7 @@ app.use(
     secure: false,
     httpOnly: true,
     secret: "sdg669s8dguiksg7993kjbh1",
-    maxAge: 1000 * 20,
+    maxAge: 1000 * 86400,
   })
 );
 app.use(userRouter);
