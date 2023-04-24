@@ -57,7 +57,7 @@ export function Login() {
             size="large"
             sx={{ mt: 3 }}
             fullWidth
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/api/users/register')}
           >
             Register
           </Button>

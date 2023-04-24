@@ -1,14 +1,43 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Button, TextField, Box } from "@mui/material";
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export function Register() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [repeatPassword, setRepeatPassword] = useState('');
 
-//   const handleSubmit = (event) => {
-//     event.preventDefault();
-//     handle login logic here
-//   };
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    if (password !== repeatPassword) {
+      console.error('Passwords do not match');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5173/api/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          username,
+          password,
+        }),
+      });
+
+      if (response.status == 201) {
+        navigate('/login');
+      } else {
+        throw new Error('Failed to register');
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   return (
     <Box
@@ -21,17 +50,19 @@ export function Register() {
         flexDirection: 'column'
       }}
     >
-        <AccountCircleIcon sx={{ fontSize: 96, color: 'lightgray' }} />
+      <AccountCircleIcon sx={{ fontSize: 96, color: 'lightgray' }} />
       <Box sx={{ width: "100%", maxWidth: "400px" }}>
-        <form >
+        <form onSubmit={handleSubmit}>
           <TextField
-            id="email"
-            label="Email Address"
-            type="email"
+            id="username"
+            label="Username"
+            type="string"
             fullWidth
             required
             margin="normal"
             variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             id="password"
@@ -41,6 +72,8 @@ export function Register() {
             required
             margin="normal"
             variant="outlined"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <TextField
             id="repeatPassword"
@@ -50,6 +83,8 @@ export function Register() {
             required
             margin="normal"
             variant="outlined"
+            value={repeatPassword}
+            onChange={(e) => setRepeatPassword(e.target.value)}
           />
           <Button
             type="submit"
