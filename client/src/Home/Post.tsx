@@ -63,7 +63,7 @@ export function Post({ post, getPosts }: PostProps) {
       >
         {post.title}
       </p>
-      <div style={{ fontSize: "20px", padding: "5px 0" }}>
+      <div style={{ fontSize: "20px", padding: "5px 0", marginBottom: "1rem", }}>
         {post.content}
       </div>
       <div
@@ -77,9 +77,10 @@ export function Post({ post, getPosts }: PostProps) {
           style={{
             display: "flex",
             flexDirection: "column",
+            gap: ".5rem",
           }}
         >
-          <p style={{ marginTop: "1rem", color: "gray" }}>
+          <p style={{ color: "gray" }}>
             Author: {post.author}
           </p>
           <p style={{ color: "gray" }}>Posted: {post.createdAt}</p>
@@ -89,7 +90,7 @@ export function Post({ post, getPosts }: PostProps) {
         className="postBtns"
           style={{
             display: 'flex',
-            gap: "1rem",
+            gap: ".5rem",
             color: "gray",
           }}
         >
