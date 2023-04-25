@@ -2,8 +2,13 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { checkIsLoggedIn } from "../checkIsLoggedIn";
+import { Post } from "./Home";
 
-export function CreatePost() {
+interface CreatePostProps {
+  getPosts: () => Promise<void>;
+}
+
+export function CreatePost({ getPosts }: CreatePostProps) {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
@@ -25,6 +30,8 @@ export function CreatePost() {
     if (response.ok) {
       setTitle("");
       setContent("");
+
+      getPosts();
     }
   };
 
