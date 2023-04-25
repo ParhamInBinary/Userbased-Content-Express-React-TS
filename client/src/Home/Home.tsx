@@ -14,24 +14,25 @@ export interface Post {
 export function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
 
-  useEffect(() => {
-    const getPosts = async () => {
-      const response = await fetch("/api/posts");
-      const jsonResponse = await response.json();
+  const getPosts = async () => {
+    const response = await fetch("/api/posts");
+    const jsonResponse = await response.json();
 
-      setPosts(jsonResponse);
-    };
-    console.log(posts);
+    setPosts(jsonResponse);
+  };
+
+  useEffect(() => {
+    
     getPosts();
   }, []);
 
   return (
     <div className="mainContainer" style={{ width: "60%" }}>
-      <CreatePost />
+      <CreatePost getPosts={getPosts} />
 
       <div className="postContainer">
         {posts.map((post) => (
-          <Post key={post._id} post={post} />
+          <Post key={post._id} post={post} getPosts={getPosts}/>
         ))}
       </div>
     </div>
