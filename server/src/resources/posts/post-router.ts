@@ -87,7 +87,7 @@ export const postRouter = express
         return;
       }
 
-      if (post.author.toString() !== user?._id.toString()) {
+      if (post.author.toString() !== user?._id.toString() && !user?.isAdmin) {
         res
           .status(403)
           .json("Not authorized to delete this post");
