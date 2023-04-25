@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { CreatePost } from "./CreatePost";
 import { Post } from "./Post";
-
+import '../index.css'
 export interface Post {
   _id: string;
   author: string;
@@ -27,7 +27,7 @@ export function Home() {
   }, []);
 
   return (
-    <div className="mainContainer" style={{ width: "60%" }}>
+    <div className="mainContainer">
       <CreatePost getPosts={getPosts} />
 
       <div className="postContainer">

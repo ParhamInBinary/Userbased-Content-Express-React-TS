@@ -1,4 +1,5 @@
 import { checkIsLoggedIn } from "../checkIsLoggedIn";
+import "../index.css";
 import { Post } from "./Home";
 interface PostProps {
   post: Post;
@@ -8,7 +9,7 @@ interface PostProps {
 export function Post({ post, getPosts }: PostProps) {
   const handleDeletePost = async () => {
     checkIsLoggedIn();
-    
+
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
     });
@@ -20,13 +21,16 @@ export function Post({ post, getPosts }: PostProps) {
 
   const handleEditPost = async () => {
     checkIsLoggedIn();
-  
+
     const updatedPost = {
       ...post,
       title: prompt("Enter the updated title:", post.title),
-      content: prompt("Enter the updated content:", post.content),
+      content: prompt(
+        "Enter the updated content:",
+        post.content
+      ),
     };
-  
+
     const response = await fetch(`/api/posts/${post._id}`, {
       method: "PUT",
       headers: {
@@ -34,17 +38,15 @@ export function Post({ post, getPosts }: PostProps) {
       },
       body: JSON.stringify(updatedPost),
     });
-  
+
     if (response.ok) {
       getPosts();
     }
   };
-  
-  
 
   return (
     <div
-      className="container"
+      className="postBody"
       style={{
         margin: "1rem 0",
         padding: "1rem",
@@ -68,24 +70,31 @@ export function Post({ post, getPosts }: PostProps) {
         style={{
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "baseline",
+          alignItems: "end",
         }}
       >
-        <p style={{ marginTop: "1rem", color: "gray" }}>
-          Author: {post.author}
-        </p>
-        <p>{post.createdAt}</p>
-
         <div
           style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          <p style={{ marginTop: "1rem", color: "gray" }}>
+            Author: {post.author}
+          </p>
+          <p style={{ color: "gray" }}>Posted: {post.createdAt}</p>
+        </div>
+
+        <div
+        className="postBtns"
+          style={{
+            display: 'flex',
             gap: "1rem",
-            width: "3rem",
             color: "gray",
           }}
         >
           <span
             style={{
-              marginRight: "1rem",
               cursor: "pointer",
             }}
             onClick={handleEditPost}
@@ -93,7 +102,7 @@ export function Post({ post, getPosts }: PostProps) {
             Edit
           </span>
           <span
-            style={{ cursor: "pointer" }}
+            style={{ cursor: "pointer"}}
             onClick={handleDeletePost}
           >
             &times;

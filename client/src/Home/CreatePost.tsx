@@ -37,6 +37,7 @@ export function CreatePost({ getPosts }: CreatePostProps) {
 
   return (
     <div
+    className="createPostContainer"
       style={{
         borderBottom: "1px solid lightgray",
         paddingBottom: "1rem",
