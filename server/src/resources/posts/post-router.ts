@@ -19,7 +19,7 @@ export const postRouter = express
     async (req: Request, res: Response) => {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
-        loggedInUser,
+        _id: loggedInUser?._id,
       });
       const { title, content } = req.body;
 
