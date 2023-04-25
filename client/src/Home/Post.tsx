@@ -1,9 +1,18 @@
+import { checkIsLoggedIn } from "../checkIsLoggedIn";
 import { Post } from "./Home";
 interface PostProps {
   post: Post;
 }
 
 export function Post({ post }: PostProps) {
+  const handleDeletePost = async () => {
+    checkIsLoggedIn();
+
+    const response = await fetch("/api/posts/:id", {
+      method: "DELETE",
+    });
+  };
+
   return (
     <div
       className="container"
@@ -44,8 +53,20 @@ export function Post({ post }: PostProps) {
             color: "gray",
           }}
         >
-          <span style={{ marginRight: "1rem" }}>Edit</span>
-          <span>&times;</span>
+          <span
+            style={{
+              marginRight: "1rem",
+              cursor: "pointer",
+            }}
+          >
+            Edit
+          </span>
+          <span
+            style={{ cursor: "pointer" }}
+            onClick={handleDeletePost}
+          >
+            &times;
+          </span>
         </div>
       </div>
     </div>
