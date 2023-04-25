@@ -114,8 +114,6 @@ export const postRouter = express
         _id: loggedInUser?._id,
       });
 
-      console.log(req.session, user);
-
       if (
         !user ||
         (post.author.toString() !== user?._id.toString() &&
@@ -138,7 +136,6 @@ export const postRouter = express
       const result = schema.validate(req.body);
 
       if (result.error) {
-        console.log(result.error);
         res.status(400).json(result.error.message);
         return;
       }
