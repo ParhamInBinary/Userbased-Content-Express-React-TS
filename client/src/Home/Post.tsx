@@ -7,8 +7,8 @@ interface PostProps {
 export function Post({ post }: PostProps) {
   const handleDeletePost = async () => {
     checkIsLoggedIn();
-
-    const response = await fetch("/api/posts/:id", {
+    
+    const response = await fetch(`/api/posts/${post._id}`, {
       method: "DELETE",
     });
   };
