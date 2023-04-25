@@ -10,6 +10,7 @@ export function Navbar() {
   const navigate = useNavigate();
 
   const isLoggedIn = checkIsLoggedIn();
+  const username = localStorage.getItem("loggedInUsername");
 
   const handleLogout = async (e: any) => {
     e.preventDefault();
@@ -38,9 +39,16 @@ export function Navbar() {
             Home
           </Typography>
           {isLoggedIn ? (
-            <Button color="inherit" onClick={handleLogout}>
-              Logout
-            </Button>
+            <div style={{ display: 'flex', alignItems: 'baseline'}}>
+              <p style={{ fontSize: ''}}>{username}</p>
+              <div style={{ height: '10px', width: '10px', backgroundColor: 'lightgreen', borderRadius: '10px', boxShadow: '1px 1px 5px lightgreen', margin: '10px'}}></div>
+              <Button
+                color="inherit"
+                onClick={handleLogout}
+              >
+                Logout
+              </Button>
+            </div>
           ) : (
             <Button
               color="inherit"
