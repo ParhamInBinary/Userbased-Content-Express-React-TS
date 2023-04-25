@@ -1,5 +1,6 @@
 import argon2 from "argon2";
 import express, { Request, Response } from "express";
+import Joi from "joi";
 import { UserModel } from "./user-model";
 
 export const userRouter = express
@@ -16,21 +17,16 @@ export const userRouter = express
     async (req: Request, res: Response) => {
       const { username, password } = req.body;
 
-      // CHECKS FOR INCORRECT OR MISSING VALUES
-      if (
-        !username ||
-        typeof username !== "string" ||
-        username.length < 3
-      ) {
-        res.status(400).json(`/"username"/i`);
-        return;
-      }
-      if (
-        !password ||
-        typeof password !== "string" ||
-        password.length < 3
-      ) {
-        res.status(400).json(`/"password"/i`);
+      // CHECK FOR MISSING OR INCORRECT VALUES
+      const schema = Joi.object({
+        username: Joi.string().required(),
+        password: Joi.string().required(),
+      });
+
+      const result = schema.validate(req.body);
+
+      if (result.error) {
+        res.status(400).json(result.error.message);
         return;
       }
 
