@@ -98,4 +98,64 @@ export const userRouter = express
       req.session = null;
       res.sendStatus(204);
     }
-  );
+  )
+
+  // Update a user
+.put("/api/users/:id", async (req: Request, res: Response) => {
+  const userId = req.params.id;
+  const { username, password } = req.body;
+
+  // Validate input
+  const schema = Joi.object({
+    username: Joi.string().required(),
+    password: Joi.string().required(),
+  });
+
+  const result = schema.validate(req.body);
+
+  if (result.error) {
+    res.status(400).json(result.error.message);
+    return;
+  }
+
+  // Check if user exists
+  const user = await UserModel.findById(userId);
+
+  if (!user) {
+    res.status(404).json("User not found");
+    return;
+  }
+
+  // Update user and save to database
+  user.username = username;
+  user.password = password;
+
+  const updatedUser = await user.save();
+
+  // Return updated user
+  res.json({
+    _id: updatedUser._id,
+    username: updatedUser.username,
+    isAdmin: updatedUser.isAdmin,
+  });
+})
+
+// Delete a user
+.delete("/api/users/:id", async (req: Request, res: Response) => {
+  const userId = req.params.id;
+
+  // Check if user exists
+  const user = await UserModel.findById(userId);
+
+  if (!user) {
+    res.status(404).json("User not found");
+    return;
+  }
+
+  // Delete user from database
+  await user.remove();
+
+  // Return success message
+  res.json({ message: "User deleted successfully" });
+});
+
