@@ -5,6 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { checkIsLoggedIn } from "../checkIsLoggedIn";
+import AdminButton from "../Home/AdminButton";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -49,6 +50,7 @@ export function Navbar() {
               Login
             </Button>
           )}
+            <AdminButton/>
         </Toolbar>
       </AppBar>
     </Box>
