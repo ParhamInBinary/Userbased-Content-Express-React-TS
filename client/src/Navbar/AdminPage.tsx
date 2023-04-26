@@ -1,5 +1,5 @@
 import { Navbar } from "./Navbar";
-import UserList from "../Home/UserList";
+import {UserList} from "../Home/UserList";
 
 export function AdminPage() {
   return (
