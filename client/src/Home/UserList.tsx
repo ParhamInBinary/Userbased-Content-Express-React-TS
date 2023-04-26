@@ -23,12 +23,27 @@ export function UserList() {
     getUsers();
   }, []);
 
-  const handleEdit = () => {
-    // logic for handling edit button click
-  };
+  const handleEdit = async () => {
+    const response = await fetch(`/api/posts/:id}`, {
+      method: "PUT",
+      headers: {"Content-type": "application/json"},
+    });
 
-  const handleDelete = () => {
-    // logic for handling delete button click
+    if (response.ok){
+      getUsers();
+    }
+  };
+// ${user._id} fungerar inte här
+
+  const handleDelete = async () => {
+    const response = await fetch(`/api/posts/:id}`, {
+      method: "DELETE",
+      headers: { "Content-type": "application/json" },
+    });
+
+    if (response.ok) { 
+      getUsers();
+    }
   };
  
   
