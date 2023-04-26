@@ -1,5 +1,9 @@
 import cookieSession from "cookie-session";
-import express, { NextFunction, Request, Response } from "express";
+import express, {
+  NextFunction,
+  Request,
+  Response,
+} from "express";
 import "express-async-errors";
 import { postRouter } from "./resources/posts/post-router";
 import { userRouter } from "./resources/users/user-router";
@@ -19,7 +23,14 @@ app.use(
 app.use(userRouter);
 app.use(postRouter);
 
-app.use((err: any, req: Request, res: Response, next: NextFunction) => {
-  res.sendStatus(500);
-  console.log(err?.message);
-});
+app.use(
+  (
+    err: any,
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) => {
+    res.sendStatus(500);
+    console.error(err);
+  }
+);

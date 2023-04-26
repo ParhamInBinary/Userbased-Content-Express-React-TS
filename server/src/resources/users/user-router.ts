@@ -8,8 +8,20 @@ export const userRouter = express
   .get(
     "/api/users",
     async (req: Request, res: Response) => {
-      const users = await UserModel.find({});
-      res.json(users);
+      const loggedInUser = req.session;
+      const user = await UserModel.findOne({
+        _id: loggedInUser?._id,
+      });
+
+      if (!user?.isAdmin) {
+        return;
+      }
+
+      const users = await UserModel.find(
+        {},
+        { password: 0 }
+      );
+      res.status(200).json(users);
     }
   )
   .post(
@@ -99,3 +111,70 @@ export const userRouter = express
       res.sendStatus(204);
     }
   )
+  .put(
+    "/api/users/:id",
+    async (req: Request, res: Response) => {
+      const loggedInUser = req.session;
+      const user = await UserModel.findOne({
+        _id: loggedInUser?._id,
+      });
+
+      if (!user?.isAdmin) {
+        res
+          .status(403)
+          .json("Not authorized to delete this post");
+        return;
+      }
+
+      const { username, isAdmin } = req.body;
+
+      const foundUser = await UserModel.findByIdAndUpdate(
+        req.params.id,
+        { username, isAdmin },
+        { new: true, select: "-password" }
+      );
+
+      if (!foundUser) {
+        return res
+          .status(404)
+          .json(`User ${req.params.id} not found`);
+      }
+
+      return res.status(200).json({
+        username: foundUser.username,
+        isAdmin: foundUser.isAdmin,
+        _id: foundUser._id.toString(),
+      });
+    }
+  )
+  .delete(
+    "/api/users/:id",
+    async (req: Request, res: Response) => {
+      const loggedInUser = req.session;
+      const user = await UserModel.findOne({
+        _id: loggedInUser?._id,
+      });
+
+      if (!user?.isAdmin) {
+        res
+          .status(403)
+          .json("Not authorized to delete this post");
+        return;
+      }
+
+      const foundUser = await UserModel.findById(
+        req.params.id,
+        { password: 0 }
+      );
+
+      if (!foundUser) {
+        return res
+          .status(404)
+          .json(`User ${req.params.id} not found`);
+      }
+
+      await UserModel.deleteOne({ _id: foundUser._id });
+
+      res.sendStatus(204);
+    }
+  );

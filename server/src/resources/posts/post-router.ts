@@ -19,7 +19,7 @@ export const postRouter = express
     async (req: Request, res: Response) => {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
-        loggedInUser,
+        _id: loggedInUser?._id,
       });
       const { title, content } = req.body;
 
@@ -69,7 +69,6 @@ export const postRouter = express
         content: specificPost!.content,
         author: specificPost!.author,
         createdAt: specificPost!.createdAt,
-        updatedAt: specificPost!.updatedAt,
       });
     }
   )
@@ -79,7 +78,7 @@ export const postRouter = express
     async (req: Request, res: Response) => {
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
-        loggedInUser,
+        _id: loggedInUser?._id,
       });
       const post = await PostModel.findById(req.params.id);
 
@@ -88,14 +87,14 @@ export const postRouter = express
         return;
       }
 
-      if (post.author.toString() !== user!._id.toString()) {
+      if (post.author.toString() !== user?._id.toString() && !user?.isAdmin) {
         res
           .status(403)
           .json("Not authorized to delete this post");
         return;
       }
 
-      await post.delete();
+      await PostModel.deleteOne({ _id: post._id });
       res.sendStatus(204);
     }
   )
@@ -112,12 +111,13 @@ export const postRouter = express
 
       const loggedInUser = req.session;
       const user = await UserModel.findOne({
-        loggedInUser,
+        _id: loggedInUser?._id,
       });
 
       if (
         !user ||
-        post.author.toString() !== user._id.toString()
+        (post.author.toString() !== user?._id.toString() &&
+          !user.isAdmin)
       ) {
         res.status(403).json("Forbidden");
         return;
@@ -131,7 +131,6 @@ export const postRouter = express
         author: Joi.string().required(),
         _id: Joi.string().required(),
         createdAt: Joi.date().required(),
-        updatedAt: Joi.date().required(),
       });
 
       const result = schema.validate(req.body);
@@ -151,7 +150,6 @@ export const postRouter = express
         content: updatedPost.content,
         author: updatedPost.author.toString(),
         createdAt: updatedPost.createdAt.toString(),
-        updatedAt: updatedPost.updatedAt.toString(),
       });
     }
   );
