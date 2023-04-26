@@ -1,14 +1,18 @@
-import React from 'react';
-  
+import { useNavigate } from 'react-router-dom';
+
 export const AdminButton: React.FC = () => {
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-  
-    if (user.isAdmin) {
-      return <button>View Users</button>;
-    } else {
-      return null;
-    }
+  const data = JSON.parse(localStorage.getItem('data') || '{}');
+  const navigate = useNavigate();
+
+  const handleNavigateToAdmin = () => {
+    navigate('/admin');
+  };
+
+  if (data.isAdmin) {
+    return <button onClick={handleNavigateToAdmin}>View Users</button>;
+  } else {
+    return null;
   }
-  
-  export default AdminButton;
-  
+}
+
+export default AdminButton;

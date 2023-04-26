@@ -1,36 +1,47 @@
-import React, { useEffect, useState } from 'react';
-import UserCard from './UserCard';
+import { useState, useEffect } from 'react';
 
-interface User {
-  id: number;
-  name: string;
-  email: string;
-}
+export function UserList() {
+   
+  interface User {
+    _id: string;
+    username: string;
+    isAdmin: boolean;
+  }
 
-export const UserList: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
 
+  const getUsers = async () => {
+    const response = await fetch('/api/users');
+    const data = await response.json();
+
+    if (response.ok) {
+      setUsers(data);
+    }
+  };
+
   useEffect(() => {
-    fetch('/api/users')
-      .then((response) => response.json())
-      .then((data) => setUsers(data));
+    getUsers();
   }, []);
 
-  const handleEdit = (id: number) => {
-    // Skicka användaren till en sida för att redigera användaren med id:t
+  const handleEdit = () => {
+    // logic for handling edit button click
   };
 
-  const handleDelete = (id: number) => {
-    // Ta bort användaren med id:t från databasen och uppdatera användarlistan
+  const handleDelete = () => {
+    // logic for handling delete button click
   };
-
+ 
+  
   return (
-    <div className="user-list">
+    <div>
+      <h1>Users</h1>
       {users.map((user) => (
-        <UserCard key={user.id} user={user} handleEdit={handleEdit} handleDelete={handleDelete} />
+        <div key={user._id}>
+          <p>{user.username}</p>
+          <button onClick={handleEdit}>Edit</button>
+          <button onClick={handleDelete}>Delete</button>
+        </div>
       ))}
     </div>
   );
-};
-
-export default UserList;
+}
