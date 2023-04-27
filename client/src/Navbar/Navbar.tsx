@@ -12,7 +12,7 @@ export function Navbar() {
 
   const isLoggedIn = checkIsLoggedIn();
   const username = localStorage.getItem("loggedInUsername");
-  const isAdmin = localStorage.getItem("loggedInIsAdmin")
+  const isAdmin = localStorage.getItem("loggedInIsAdmin");
 
   const handleLogout = async (e: any) => {
     e.preventDefault();
@@ -58,24 +58,16 @@ export function Navbar() {
                   margin: "10px",
                 }}
               ></div>
-              <Button
-                color="inherit"
-                onClick={handleLogout}
-              >
+              <Button color="inherit" onClick={handleLogout}>
                 Logout
               </Button>
             </div>
           ) : (
-            <Button
-              color="inherit"
-              onClick={() => navigate("/login")}
-            >
+            <Button color="inherit" onClick={() => navigate("/login")}>
               Login
             </Button>
           )}
-          {
-            isLoggedIn && isAdmin === "true" && (<AdminButton/>)
-          }
+          {isLoggedIn && isAdmin === "true" && <AdminButton />}
         </Toolbar>
       </AppBar>
     </Box>
