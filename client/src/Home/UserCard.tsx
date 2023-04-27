@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface UserCardProps {
   user: {
@@ -6,43 +6,47 @@ interface UserCardProps {
     Username: string;
     isAdmin: boolean;
   };
-  getUsers: () => Promise<void>
+  getUsers: () => Promise<void>;
 }
 
-const UserCard: React.FC<UserCardProps> = ({ user, getUsers }: UserCardProps) => {
-  const handleEdit = async() => {
+const UserCard: React.FC<UserCardProps> = ({
+  user,
+  getUsers,
+}: UserCardProps) => {
+  const handleEdit = async () => {
+    const updatedUser = { ...user, isAdmin: !user.isAdmin };
 
-    const updatedUser = {...user, isAdmin: !user.isAdmin}
-
-    const response = await fetch(`/api/users/${user._id}`, 
-    {
-      method: 'PUT',
+    const response = await fetch(`/api/users/${user._id}`, {
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(updatedUser)
-    })
-  
-    if(response.ok){
-      getUsers()
-    }
-  }
+      body: JSON.stringify(updatedUser),
+    });
 
-  const handleDelete = async() => {
-    const response = await fetch(`/api/users/${user._id}`, 
-    {method: 'DELETE',})
-
-    if(response.ok){
-      getUsers()
+    if (response.ok) {
+      getUsers();
     }
-  }
-  
+  };
+
+  const handleDelete = async () => {
+    const response = await fetch(`/api/users/${user._id}`, {
+      method: "DELETE",
+    });
+
+    if (response.ok) {
+      getUsers();
+    }
+  };
+
   return (
-    <div className="user-card" style={{
+    <div
+      className="user-card"
+      style={{
         marginTop: "5rem",
         padding: "1rem",
         width: "100%",
-        maxWidth:"300px",
+        maxWidth: "300px",
         height: "100%",
         maxHeight: "100px",
         border: "1px solid #ccc",
@@ -50,45 +54,44 @@ const UserCard: React.FC<UserCardProps> = ({ user, getUsers }: UserCardProps) =>
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)"
+        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
       }}
     >
       <h2 style={{ margin: "0" }}>{user.Username}</h2>
       <div style={{ display: "flex", alignItems: "center" }}>
         <span style={{ marginRight: "1rem" }}>{user.isAdmin}</span>
 
-        {!user.isAdmin?(
-           <button
-           onClick={() => handleEdit()}
-           style={{
-             padding: "0.5rem 1rem",
-             border: "none",
-             borderRadius: "5px",
-             backgroundColor: "#4caf50",
-             color: "#fff",
-             cursor: "pointer",
-             marginRight: "0.5rem"
-           }}
-         >
-           Make Admin
-         </button>
-        ):(
+        {!user.isAdmin ? (
           <button
-          onClick={() => handleEdit()}
-          style={{
-            padding: "0.5rem 1rem",
-            border: "none",
-            borderRadius: "5px",
-            backgroundColor: "#4caf50",
-            color: "#fff",
-            cursor: "pointer",
-            marginRight: "0.5rem"
-          }}
-        >
-          Remove Admin
-        </button>
-        )
-}
+            onClick={() => handleEdit()}
+            style={{
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "5px",
+              backgroundColor: "#4caf50",
+              color: "#fff",
+              cursor: "pointer",
+              marginRight: "0.5rem",
+            }}
+          >
+            Make Admin
+          </button>
+        ) : (
+          <button
+            onClick={() => handleEdit()}
+            style={{
+              padding: "0.5rem 1rem",
+              border: "none",
+              borderRadius: "5px",
+              backgroundColor: "#4caf50",
+              color: "#fff",
+              cursor: "pointer",
+              marginRight: "0.5rem",
+            }}
+          >
+            Remove Admin
+          </button>
+        )}
         <button
           onClick={() => handleDelete()}
           style={{
