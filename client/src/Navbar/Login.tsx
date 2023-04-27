@@ -1,5 +1,6 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Box, Button, TextField } from "@mui/material";
+// import Joi from "joi";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,29 +8,47 @@ export function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  // const [error, setError] = useState("");
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-
+    
     const newUser = {
       username,
       password,
     };
-
+    
     const response = await fetch("/api/users/login", {
       method: "POST",
       body: JSON.stringify(newUser),
       headers: { "Content-type": "application/json" },
     });
+    
+    const data = await response.json();
+    console.log(data)
+    
+    // const schema = Joi.object({
+    //   username: !response.redirected,
+    //   password: response.redirected,
+    // });
 
-    const data = await response.json()
+    // const result = schema.validate(newUser);
+
+    // if (result.error) {
+    //   console.log(result.error.message)
+    //   setError(result.error.message)
+    //   return;
+    // }
 
     if (response.ok) {
-      localStorage.setItem('loggedInUsername', data.username)
-      localStorage.setItem('loggedInUserID', data._id)
-      localStorage.setItem('loggedInIsAdmin', data.isAdmin)
-      
-      navigate('/');
+      localStorage.setItem(
+        "loggedInUsername",
+        data.username
+      );
+      localStorage.setItem("loggedInUserID", data._id);
+      localStorage.setItem("loggedInIsAdmin", data.isAdmin);
+
+      navigate("/");
     }
   };
 
@@ -61,6 +80,9 @@ export function Login() {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
             />
+            {/* {error && (
+              <span style={{color: 'red'}}>Incorrect username or password</span>
+            )} */}
             <TextField
               id="password"
               label="Password"
@@ -71,7 +93,10 @@ export function Login() {
               variant="outlined"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            />
+              />
+              {/* {error && (
+                <span style={{color: 'red'}}>Incorrect username or password</span>
+              )} */}
             <Button
               type="submit"
               variant="contained"
