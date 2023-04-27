@@ -45,7 +45,7 @@ const UserCard: React.FC<UserCardProps> = ({
       className="user-card"
       style={{
         marginTop: "5rem",
-        padding: "1rem",
+        padding: "10px",
         width: "100%",
         maxWidth: "340px",
         height: "100%",
