@@ -1,4 +1,3 @@
-import { Navbar } from "./Navbar";
 import { useEffect, useState } from "react";
 import UserCard from "../Home/UserCard";
 
@@ -27,12 +26,12 @@ export function AdminPage() {
   
   return (
    <>
-    <Navbar></Navbar>
-    <div>
+    <div style={{width: "100%", display: "flex", flexDirection: "column", alignItems: "center"}}>
       {users.map((user) => (
-        <UserCard user={{
+        <UserCard key = {user._id} user={{
           _id: user._id,
-          Username: user.username
+          Username: user.username,
+          isAdmin: user.isAdmin
         }}
         getUsers={getUsers}
         />

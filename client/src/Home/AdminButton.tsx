@@ -1,3 +1,4 @@
+import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
 export const AdminButton: React.FC = () => {
@@ -7,5 +8,5 @@ export const AdminButton: React.FC = () => {
     navigate('/admin');
   };
 
-    return <button onClick={handleNavigateToAdmin}>View Users</button>;
+    return <Button style={{marginLeft: "1rem"}} color="inherit" onClick={handleNavigateToAdmin}>View Users</Button>;
 ;}
