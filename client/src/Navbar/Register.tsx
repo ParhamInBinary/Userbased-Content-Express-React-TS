@@ -1,8 +1,11 @@
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Box, Button, TextField } from "@mui/material";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function Register() {
+  const navigate = useNavigate();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -23,6 +26,8 @@ export function Register() {
     if (response.ok) {
       setUsername("");
       setPassword("");
+
+      navigate("/login");
     }
   };
 
@@ -52,7 +57,7 @@ export function Register() {
             variant="outlined"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            />
+          />
           <TextField
             id="password"
             label="Password"
