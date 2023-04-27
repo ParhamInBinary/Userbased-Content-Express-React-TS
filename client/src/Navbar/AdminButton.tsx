@@ -17,7 +17,7 @@ export const AdminButton: React.FC = () => {
       color="inherit"
       onClick={handleNavigateToAdmin}
     >
-      View Users
+      Users
     </Button>
   );
 };
