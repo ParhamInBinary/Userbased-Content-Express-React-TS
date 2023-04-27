@@ -5,6 +5,7 @@ import {
   deletePost,
   findPost,
   getAllPosts,
+  updatePost,
 } from "./postController";
 
 export const postRouter = express
@@ -13,4 +14,4 @@ export const postRouter = express
   .post("/api/posts", auth, createPost)
   .get("/api/posts/:id", findPost)
   .delete("/api/posts/:id", auth, deletePost)
-  .put("/api/posts/:id", auth);
+  .put("/api/posts/:id", auth, updatePost);
