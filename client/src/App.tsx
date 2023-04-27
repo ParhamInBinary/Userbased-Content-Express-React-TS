@@ -3,7 +3,7 @@ import { Home } from "./Home/Home";
 import { Login } from "./Navbar/Login";
 import { Navbar } from "./Navbar/Navbar";
 import { Register } from "./Navbar/Register";
-import { AdminPage } from "./Navbar/AdminPage";
+import { AdminPage } from "./Admin/AdminPage";
 
 export default function App() {
   return (
