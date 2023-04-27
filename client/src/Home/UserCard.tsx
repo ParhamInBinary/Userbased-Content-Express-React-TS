@@ -54,7 +54,7 @@ const UserCard: React.FC<UserCardProps> = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        boxShadow: "0px 0px 10px rgba(0, 0, 0, 0.2)",
+        boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.2)",
       }}
     >
       <h2 style={{ margin: "0" }}>{user.Username}</h2>
