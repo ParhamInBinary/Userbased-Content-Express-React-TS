@@ -46,7 +46,7 @@ const UserCard: React.FC<UserCardProps> = ({
         marginTop: "5rem",
         padding: "1rem",
         width: "100%",
-        maxWidth: "300px",
+        maxWidth: "340px",
         height: "100%",
         maxHeight: "100px",
         border: "1px solid #ccc",
