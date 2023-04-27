@@ -15,6 +15,8 @@ const UserCard: React.FC<UserCardProps> = ({
   user,
   getUsers,
 }: UserCardProps) => {
+  const loggedInUser = localStorage.getItem('loggedInUsername')
+
   const handleEdit = async () => {
     const updatedUser = { ...user, isAdmin: !user.isAdmin };
 
@@ -72,6 +74,8 @@ const UserCard: React.FC<UserCardProps> = ({
           {user.Username}
         </Typography>
       </div>
+      {loggedInUser === user.Username ? ( <span>You can't edit your own status</span>) : (
+
       <div
         style={{
           display: "flex",
@@ -115,6 +119,7 @@ const UserCard: React.FC<UserCardProps> = ({
           Delete
         </Button>
       </div>
+      )}
     </div>
   );
 };
