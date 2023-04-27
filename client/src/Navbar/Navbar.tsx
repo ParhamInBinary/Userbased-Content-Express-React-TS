@@ -5,7 +5,7 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { checkIsLoggedIn } from "../checkIsLoggedIn";
-import { AdminButton } from "../Home/AdminButton";
+import { AdminButton } from "./AdminButton";
 
 export function Navbar() {
   const navigate = useNavigate();
@@ -30,44 +30,58 @@ export function Navbar() {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
-        <Toolbar>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
           <Typography
             style={{ cursor: "pointer" }}
             variant="h6"
             component="div"
-            sx={{ flexGrow: 1 }}
             onClick={() => navigate("/")}
           >
             Home
           </Typography>
-          {isLoggedIn ? (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "baseline",
-              }}
-            >
-              <p style={{ fontSize: "" }}>{username}</p>
+          <div>
+            {isLoggedIn ? (
               <div
                 style={{
-                  height: "10px",
-                  width: "10px",
-                  backgroundColor: "lightgreen",
-                  borderRadius: "10px",
-                  boxShadow: "1px 1px 5px lightgreen",
-                  margin: "10px",
+                  display: "flex",
+                  alignItems: "baseline",
                 }}
-              ></div>
-              <Button color="inherit" onClick={handleLogout}>
-                Logout
+              >
+                <p>{username}</p>
+                <div
+                  style={{
+                    height: "10px",
+                    width: "10px",
+                    backgroundColor: "lightgreen",
+                    borderRadius: "10px",
+                    boxShadow: "1px 1px 5px lightgreen",
+                    margin: "7px",
+                  }}
+                />
+                {isLoggedIn && isAdmin === "true" && (
+                  <AdminButton />
+                )}
+                <Button
+                  color="inherit"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </Button>
+              </div>
+            ) : (
+              <Button
+                color="inherit"
+                onClick={() => navigate("/login")}
+              >
+                Login
               </Button>
-            </div>
-          ) : (
-            <Button color="inherit" onClick={() => navigate("/login")}>
-              Login
-            </Button>
-          )}
-          {isLoggedIn && isAdmin === "true" && <AdminButton />}
+            )}
+          </div>
         </Toolbar>
       </AppBar>
     </Box>
