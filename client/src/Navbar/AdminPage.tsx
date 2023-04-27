@@ -11,7 +11,7 @@ export function AdminPage() {
   const [users, setUsers] = useState<User[]>([]);
 
   const getUsers = async () => {
-    const response = await fetch('/api/users');
+    const response = await fetch("/api/users");
     const data = await response.json();
 
     if (response.ok) {
@@ -23,21 +23,28 @@ export function AdminPage() {
     getUsers();
   }, []);
 
-  
   return (
-   <>
-    <div style={{width: "100%", display: "flex", flexDirection: "column", alignItems: "center"}}>
-      {users.map((user) => (
-        <UserCard key = {user._id} user={{
-          _id: user._id,
-          Username: user.username,
-          isAdmin: user.isAdmin
+    <>
+      <div
+        style={{
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
-        getUsers={getUsers}
-        />
-      ))}
-    </div>
-    </> 
-  )
-    
+      >
+        {users.map((user) => (
+          <UserCard
+            key={user._id}
+            user={{
+              _id: user._id,
+              Username: user.username,
+              isAdmin: user.isAdmin,
+            }}
+            getUsers={getUsers}
+          />
+        ))}
+      </div>
+    </>
+  );
 }
