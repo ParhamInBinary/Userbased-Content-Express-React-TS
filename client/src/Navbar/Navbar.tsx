@@ -5,13 +5,14 @@ import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useNavigate } from "react-router-dom";
 import { checkIsLoggedIn } from "../checkIsLoggedIn";
-import AdminButton from "../Home/AdminButton";
+import { AdminButton } from "../Home/AdminButton";
 
 export function Navbar() {
   const navigate = useNavigate();
 
   const isLoggedIn = checkIsLoggedIn();
   const username = localStorage.getItem("loggedInUsername");
+  const isAdmin = localStorage.getItem("loggedInIsAdmin")
 
   const handleLogout = async (e: any) => {
     e.preventDefault();
@@ -72,7 +73,9 @@ export function Navbar() {
               Login
             </Button>
           )}
-            <AdminButton/>
+          {
+            isLoggedIn && isAdmin === "true" && (<AdminButton/>)
+          }
         </Toolbar>
       </AppBar>
     </Box>
