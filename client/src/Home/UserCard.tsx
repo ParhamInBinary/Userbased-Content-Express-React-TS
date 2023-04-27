@@ -60,7 +60,7 @@ const UserCard: React.FC<UserCardProps> = ({
       }}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <AccountCircleIcon fontSize="large" />
+        <AccountCircleIcon fontSize="large" style={{color: 'lightgray'}} />
         <h2 style={{ margin: "0", marginLeft: "1rem" }}>{user.Username}</h2>
       </div>
       <div style={{ display: "flex", alignItems: "center" }}>
