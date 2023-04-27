@@ -1,4 +1,5 @@
 import React from "react";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 interface UserCardProps {
   user: {
@@ -54,10 +55,14 @@ const UserCard: React.FC<UserCardProps> = ({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
+        flexDirection: "column",
         boxShadow: "0px 0px 30px rgba(0, 0, 0, 0.2)",
       }}
     >
-      <h2 style={{ margin: "0" }}>{user.Username}</h2>
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <AccountCircleIcon fontSize="large" />
+        <h2 style={{ margin: "0", marginLeft: "1rem" }}>{user.Username}</h2>
+      </div>
       <div style={{ display: "flex", alignItems: "center" }}>
         <span style={{ marginRight: "1rem" }}>{user.isAdmin}</span>
 
